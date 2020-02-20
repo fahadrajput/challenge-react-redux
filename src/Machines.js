@@ -1,6 +1,7 @@
+/* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
-import { Table, Progress, Input, Button } from 'antd';
+import { Table, Input, Button, Icon, notification } from 'antd';
 import { useHistory, useParams } from 'react-router-dom'
 import axios from 'axios';
 import Health from './Components/Health'
@@ -29,7 +30,9 @@ export default function Machines() {
 	const [loading, setLoading] = useState(true)
 	const [data, setData] = useState([])
 	const [currentMachine, setCurrentMachine] = useState({})
+	const [currentName, setCurrentName] = useState('');
 	const [isUpdate, setIsUpdate] = useState(true)
+	const [disable, setDisabled] = useState(false)
 	const history = useHistory()
 	const params = useParams()
 
@@ -38,8 +41,7 @@ export default function Machines() {
 			axios.get(`http://localhost:8080/machines/${params.machineId}`)
 				.then((res) => {
 					setCurrentMachine(res.data)
-					console.log('res')
-					// handleUpdate(res.data)
+					setCurrentName(res.data.name)
 				})
 		}
 		else {
@@ -56,21 +58,47 @@ export default function Machines() {
 		}
 	}, [isUpdate])
 
+
+	function updateName() {
+		setDisabled(true)
+		axios.put(`http://localhost:8080/machines/${params.machineId}`, {
+			name: currentName
+		})
+			.then((result) => {
+				setCurrentMachine(result.data)
+				setDisabled(false)
+				openNotification("Success", "Successfully Update", "check")
+			})
+			.catch((e) => {
+				setDisabled(false)
+				openNotification("Error", "Something Went Wrong", "close-circle", "red")
+			})
+	}
+
+	function openNotification(title, desc, icon, color = '#108ee9') {
+		notification.open({
+			message: title,
+			description: desc,
+			icon: <Icon type={icon} style={{ color: color }} />
+		});
+	}
+
 	return (
 		<div>
 			{params.machineId ? <div style={{ display: 'flex' }}>
 				<div style={{ flex: 1 }}>
 					<h1>{currentMachine.name}</h1>
 					<h2>Update Device</h2>
-					<h3>Name:</h3>
-					<Input value={currentMachine.name} style={{ width: '80%', marginBottom: 20, display: 'block' }} />
+					<h3 style={{ marginTop: 20 }}>Name:</h3>
+					<Input value={currentName} onChange={(e) => setCurrentName(e.target.value)} style={{ width: '80%', marginBottom: 20, display: 'block' }} />
 					<div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '20%' }}>
-						<Button type="primary">Submit</Button>
+						<Button type="primary" onClick={updateName} disabled={disable}>Submit</Button>
 					</div>
 				</div>
 				<div style={{ flex: 1, marginTop: 20 }}>
 
 					<div style={{ width: '80%', borderWidth: 1, borderColor: 'black', borderStyle: 'solid', marginBottom: 20 }}>
+						<h2 style={{ textAlign: 'center', marginTop: 10, marginBottom: -5 }}>{currentMachine.health}</h2>
 						<Health health={currentMachine.health} />
 					</div>
 					<h1>Stats</h1>
@@ -86,6 +114,7 @@ export default function Machines() {
 						return {
 							onClick: () => {
 								setCurrentMachine(record)
+								setCurrentName(record.name)
 								history.push(`/machines/${record.id}`)
 							}
 						};
