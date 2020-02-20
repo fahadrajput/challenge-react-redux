@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+/* eslint-disable react/display-name */
 /* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
@@ -5,6 +7,7 @@ import { Table, Input, Button, Icon, notification } from 'antd';
 import { useHistory, useParams } from 'react-router-dom'
 import axios from 'axios';
 import Health from './Components/Health'
+import Websocket from 'react-websocket';
 
 
 const columns = [
@@ -83,8 +86,22 @@ export default function Machines() {
 		});
 	}
 
+	function handleData(v) {
+		let result = JSON.parse(v);
+		let updateData = data.map((v) => {
+			if (result.id === v.id) {
+				v.health = result.health
+			}
+			return v
+		})
+
+		setData(updateData)
+	}
+
 	return (
 		<div>
+			<Websocket url='ws://localhost:1337'
+				onMessage={handleData} />
 			{params.machineId ? <div style={{ display: 'flex' }}>
 				<div style={{ flex: 1 }}>
 					<h1>{currentMachine.name}</h1>
