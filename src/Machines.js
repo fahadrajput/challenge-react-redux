@@ -47,18 +47,16 @@ export default function Machines() {
 					setCurrentName(res.data.name)
 				})
 		}
-		else {
-			axios.get('http://localhost:8080/machines')
-				.then((result) => {
-					let { data } = result
-					data = data.map((v) => {
-						v.key = v.id
-						return v
-					})
-					setData(data)
-					setLoading(false)
+		axios.get('http://localhost:8080/machines')
+			.then((result) => {
+				let { data } = result
+				data = data.map((v) => {
+					v.key = v.id
+					return v
 				})
-		}
+				setData(data)
+				setLoading(false)
+			})
 	}, [isUpdate])
 
 
