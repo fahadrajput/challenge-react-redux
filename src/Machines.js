@@ -7,7 +7,9 @@ import { Table, Input, Button, Icon, notification } from 'antd';
 import { useHistory, useParams } from 'react-router-dom'
 import axios from 'axios';
 import Health from './Components/Health'
+import { useDispatch, useSelector } from "react-redux";
 import Websocket from 'react-websocket';
+import { getMachines } from './Redux/actions/machineActions'
 
 
 const columns = [
@@ -31,13 +33,14 @@ const columns = [
 
 export default function Machines() {
 	const [loading, setLoading] = useState(true)
-	const [data, setData] = useState([])
 	const [currentMachine, setCurrentMachine] = useState({})
 	const [currentName, setCurrentName] = useState('');
-	const [isUpdate, setIsUpdate] = useState(true)
-	const [disable, setDisabled] = useState(false)
-	const history = useHistory()
-	const params = useParams()
+	const [isUpdate, setIsUpdate] = useState(true);
+	const [disable, setDisabled] = useState(false);
+	const history = useHistory();
+	const params = useParams();
+	const dispatch = useDispatch();
+	const { machineData } = useSelector(state => state.machineReducer);
 
 	useEffect(() => {
 		if (params.machineId) {
@@ -54,10 +57,18 @@ export default function Machines() {
 					v.key = v.id
 					return v
 				})
-				setData(data)
+				dispatch(getMachines(data))
 				setLoading(false)
 			})
 	}, [isUpdate])
+
+	function openNotification(title, desc, icon, color = '#108ee9') {
+		notification.open({
+			message: title,
+			description: desc,
+			icon: <Icon type={icon} style={{ color: color }} />
+		});
+	}
 
 
 	function updateName() {
@@ -77,25 +88,16 @@ export default function Machines() {
 			})
 	}
 
-	function openNotification(title, desc, icon, color = '#108ee9') {
-		notification.open({
-			message: title,
-			description: desc,
-			icon: <Icon type={icon} style={{ color: color }} />
-		});
-	}
-
 	function handleData(v) {
 		let result = JSON.parse(v);
-		console.log('res', result)
-		let updateData = data.map((v) => {
+		let updateData = machineData.map((v) => {
 			if (result.id === v.id) {
 				v.health = result.health
 			}
 			return v
 		})
 
-		setData(updateData)
+		dispatch(getMachines(updateData))
 	}
 
 	return (
@@ -123,7 +125,7 @@ export default function Machines() {
 				</div>
 			</div> : <Table
 					columns={columns}
-					dataSource={data}
+					dataSource={machineData}
 					size="middle"
 					pagination={false}
 					loading={loading}
