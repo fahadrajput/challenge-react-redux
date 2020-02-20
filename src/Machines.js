@@ -9,7 +9,7 @@ import axios from 'axios';
 import Health from './Components/Health'
 import { useDispatch, useSelector } from "react-redux";
 import Websocket from 'react-websocket';
-import { getMachines, getCurrentMachine } from './Redux/actions/machineActions'
+import { getMachines } from './Redux/actions/machineActions'
 
 
 const columns = [
@@ -33,19 +33,20 @@ const columns = [
 
 export default function Machines() {
 	const [loading, setLoading] = useState(true)
+	const [currentMachine, setCurrentMachine] = useState({})
 	const [currentName, setCurrentName] = useState('');
 	const [isUpdate, setIsUpdate] = useState(true);
 	const [disable, setDisabled] = useState(false);
 	const history = useHistory();
 	const params = useParams();
 	const dispatch = useDispatch();
-	const { machineData, currentMachine } = useSelector(state => state.machineReducer);
+	const { machineData } = useSelector(state => state.machineReducer);
 
 	useEffect(() => {
 		if (params.machineId) {
 			axios.get(`http://localhost:8080/machines/${params.machineId}`)
 				.then((res) => {
-					dispatch(getCurrentMachine(res.data))
+					setCurrentMachine(res.data)
 					setCurrentName(res.data.name)
 				})
 		}
@@ -76,7 +77,7 @@ export default function Machines() {
 			name: currentName
 		})
 			.then((result) => {
-				dispatch(getCurrentMachine(result.data))
+				setCurrentMachine(result.data)
 				setDisabled(false)
 				setIsUpdate(!isUpdate)
 				openNotification("Success", "Successfully Update", "check")
@@ -103,41 +104,44 @@ export default function Machines() {
 		<div>
 			<Websocket url='ws://localhost:1337'
 				onMessage={handleData} />
-			{params.machineId ? <div style={{ display: 'flex' }}>
+			{params.machineId ? <div className="machine1">
 				<div style={{ flex: 1 }}>
 					<h1>{currentMachine.name}</h1>
 					<h2>Update Device</h2>
 					<h3 style={{ marginTop: 20 }}>Name:</h3>
-					<Input value={currentName} onChange={(e) => setCurrentName(e.target.value)} style={{ width: '80%', marginBottom: 20, display: 'block' }} />
-					<div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '20%' }}>
+					<Input value={currentName} onChange={(e) => setCurrentName(e.target.value)} className="input-update" />
+					<div className="submit">
 						<Button type="primary" onClick={updateName} disabled={disable}>Submit</Button>
 					</div>
 				</div>
 				<div style={{ flex: 1, marginTop: 20 }}>
 
-					<div style={{ width: '80%', borderWidth: 1, borderColor: 'black', borderStyle: 'solid', marginBottom: 20 }}>
-						<h2 style={{ textAlign: 'center', marginTop: 10, marginBottom: -5 }}>{currentMachine.health}</h2>
+					<div className="health">
+						<h2 className="machine-name">{currentMachine.health}</h2>
 						<Health health={currentMachine.health} />
 					</div>
 					<h1>Stats</h1>
 					<h4>IP Address: {currentMachine.ip_address}</h4>
 				</div>
-			</div> : <Table
-					columns={columns}
-					dataSource={machineData}
-					size="middle"
-					pagination={false}
-					loading={loading}
-					onRow={(record, rowIndex) => {
-						return {
-							onClick: () => {
-								dispatch(getCurrentMachine(record))
-								setCurrentName(record.name)
-								history.push(`/machines/${record.id}`)
-							}
-						};
-					}}
-				/>}
+			</div> :
+				<div>
+					<Table
+						columns={columns}
+						dataSource={machineData}
+						size="middle"
+						pagination={false}
+						loading={loading}
+						onRow={(record, rowIndex) => {
+							return {
+								onClick: () => {
+									setCurrentMachine(record)
+									setCurrentName(record.name)
+									history.push(`/machines/${record.id}`)
+								}
+							};
+						}}
+					/>
+				</div>}
 		</div>
 	);
 }

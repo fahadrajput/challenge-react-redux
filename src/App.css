@@ -37,3 +37,32 @@ body, html {
 .App-link {
 	color: #61dafb;
 }
+
+
+.machine1{
+	display: flex;
+}
+
+.input-update{
+	width: 80%;
+	margin-bottom: 20px;
+	display: block;
+}
+
+.submit{
+	display: flex;
+	justify-content: flex-end;
+	margin-right: 20%;
+}
+
+.health{
+	width: 80%;
+	border: 1px black solid;
+	margin-bottom: 20px;
+}
+
+.machine-name{
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: -5px;
+}

@@ -7,16 +7,7 @@ const getMachines = (data) => {
     }
 }
 
-const getCurrentMachine = (data) => {
-
-    return {
-        type: "CURR_MACHINE",
-        data
-    }
-}
-
 
 export {
-    getMachines,
-    getCurrentMachine
+    getMachines
 }
