@@ -13,6 +13,7 @@
 		"react-redux": "^7.2.0",
 		"react-router-dom": "5.1.2",
 		"react-scripts": "3.4.0",
+		"react-test-renderer": "^16.12.0",
 		"react-websocket": "^2.1.0",
 		"redux": "^4.0.5",
 		"redux-thunk": "^2.3.0",
@@ -24,13 +25,15 @@
 		"eslint": "^6.8.0",
 		"koa": "^2.11.0",
 		"koa-bodyparser": "^4.2.1",
-		"koa-router": "^8.0.6"
+		"koa-router": "^8.0.6",
+		"react-app-rewired": "^2.1.5",
+		"react-dev-utils": "^10.2.0"
 	},
 	"scripts": {
 		"server": "node server/index.js",
 		"start": "react-scripts start",
 		"build": "EXTEND_ESLINT=true react-scripts build",
-		"test": "react-app-rewired test"
+		"test": "EXTEND_ESLINT=true react-app-rewired test"
 	},
 	"browserslist": {
 		"production": [
