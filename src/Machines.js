@@ -9,7 +9,7 @@ import axios from 'axios';
 import Health from './Components/Health'
 import { useDispatch, useSelector } from "react-redux";
 import Websocket from 'react-websocket';
-import { getMachines } from './Redux/actions/machineActions'
+import { getMachines, getCurrentMachine } from './Redux/actions/machineActions'
 
 
 const columns = [
@@ -33,20 +33,19 @@ const columns = [
 
 export default function Machines() {
 	const [loading, setLoading] = useState(true)
-	const [currentMachine, setCurrentMachine] = useState({})
 	const [currentName, setCurrentName] = useState('');
 	const [isUpdate, setIsUpdate] = useState(true);
 	const [disable, setDisabled] = useState(false);
 	const history = useHistory();
 	const params = useParams();
 	const dispatch = useDispatch();
-	const { machineData } = useSelector(state => state.machineReducer);
+	const { machineData, currentMachine } = useSelector(state => state.machineReducer);
 
 	useEffect(() => {
 		if (params.machineId) {
 			axios.get(`http://localhost:8080/machines/${params.machineId}`)
 				.then((res) => {
-					setCurrentMachine(res.data)
+					dispatch(getCurrentMachine(res.data))
 					setCurrentName(res.data.name)
 				})
 		}
@@ -77,7 +76,7 @@ export default function Machines() {
 			name: currentName
 		})
 			.then((result) => {
-				setCurrentMachine(result.data)
+				dispatch(getCurrentMachine(result.data))
 				setDisabled(false)
 				setIsUpdate(!isUpdate)
 				openNotification("Success", "Successfully Update", "check")
@@ -132,7 +131,7 @@ export default function Machines() {
 					onRow={(record, rowIndex) => {
 						return {
 							onClick: () => {
-								setCurrentMachine(record)
+								dispatch(getCurrentMachine(record))
 								setCurrentName(record.name)
 								history.push(`/machines/${record.id}`)
 							}

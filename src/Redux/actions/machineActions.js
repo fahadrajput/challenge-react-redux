@@ -1,12 +1,22 @@
-const getMachines = (data) => {
 
+const getMachines = (data) => {
+    
     return {
         type: "MACHINES",
         data
     }
 }
 
+const getCurrentMachine = (data) => {
+
+    return {
+        type: "CURR_MACHINE",
+        data
+    }
+}
+
 
 export {
-    getMachines
+    getMachines,
+    getCurrentMachine
 }
