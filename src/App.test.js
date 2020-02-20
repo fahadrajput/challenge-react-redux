@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import App from './App';
 import Machines from './Machines'
 import Health from './Components/Health'
@@ -11,6 +11,8 @@ import {
   Link
 } from 'react-router-dom';
 import renderer from 'react-test-renderer';
+
+afterEach(cleanup)
 
 test('renders /machines link', () => {
   const { getByText } = render(<App />);
@@ -29,7 +31,7 @@ describe('Health', () => {
 
 describe('Health', () => {
   test('render Machines list Progress', () => {
-    const component1 = renderer.create(<Machines useHistory={useHistory()} />);
+    const component1 = renderer.create(<Machines useHistory={useHistory} />);
     let tree = component1.toJSON();
     expect(tree).toMatchSnapshot();
   });
