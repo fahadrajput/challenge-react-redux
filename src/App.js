@@ -8,7 +8,7 @@ import {
 import Machines from './Machines';
 import './App.css';
 
-function App () {
+function App() {
 	return (
 		<Router>
 			<div className='App'>
@@ -22,7 +22,10 @@ function App () {
 				</nav>
 
 				<Switch>
-					<Route path='/machines'>
+					<Route path='/machines' exact>
+						<Machines />
+					</Route>
+					<Route path='/machines/:machineId'>
 						<Machines />
 					</Route>
 				</Switch>

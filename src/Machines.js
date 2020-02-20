@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'antd/dist/antd.css';
 import { Table, Progress, Button } from 'antd';
+import { useHistory, useParams } from 'react-router-dom'
 import axios from 'axios';
 
 
@@ -26,15 +27,30 @@ const columns = [
 export default function Machines() {
 	const [loading, setLoading] = useState(true)
 	const [data, setData] = useState([])
+	const [currentMachine, setCurrentMachine] = useState([])
+	const history = useHistory()
+	const params = useParams()
 
 	useEffect(() => {
 		axios.get('http://localhost:8080/machines')
 			.then((result) => {
-				const { data } = result
+				let { data } = result
+				data = data.map((v) => {
+					v.key = v.id
+					return v
+				})
 				setData(data)
 				setLoading(false)
 			})
 	})
+
+	if (params.machineId) {
+		return (
+			<div>
+				<h1></h1>
+			</div>
+		)
+	}
 
 	return (
 		<div>
@@ -48,7 +64,7 @@ export default function Machines() {
 				onRow={(record, rowIndex) => {
 					return {
 						onClick: () => {
-							console.log(record.id)
+							history.push(`/machines/${record.id}`)
 						}
 					};
 				}}
