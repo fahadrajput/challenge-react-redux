@@ -70,6 +70,7 @@ export default function Machines() {
 			.then((result) => {
 				setCurrentMachine(result.data)
 				setDisabled(false)
+				setIsUpdate(!isUpdate)
 				openNotification("Success", "Successfully Update", "check")
 			})
 			.catch((e) => {
@@ -88,6 +89,7 @@ export default function Machines() {
 
 	function handleData(v) {
 		let result = JSON.parse(v);
+		console.log('res', result)
 		let updateData = data.map((v) => {
 			if (result.id === v.id) {
 				v.health = result.health
