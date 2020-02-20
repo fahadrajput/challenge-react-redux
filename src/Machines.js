@@ -3,6 +3,7 @@ import 'antd/dist/antd.css';
 import { Table, Progress, Input, Button } from 'antd';
 import { useHistory, useParams } from 'react-router-dom'
 import axios from 'axios';
+import Health from './Components/Health'
 
 
 const columns = [
@@ -18,7 +19,7 @@ const columns = [
 		title: 'Health',
 		dataIndex: 'health',
 		render: (v) => <div>
-			<Progress percent={v} strokeWidth={15} size="small" />
+			<Health health={v} />
 		</div>
 	}
 ];
@@ -68,16 +69,9 @@ export default function Machines() {
 					</div>
 				</div>
 				<div style={{ flex: 1, marginTop: 20 }}>
-					
+
 					<div style={{ width: '80%', borderWidth: 1, borderColor: 'black', borderStyle: 'solid', marginBottom: 20 }}>
-						<h2 style={{ textAlign: 'center', marginTop: 10 }}>{currentMachine.health}</h2>
-						<div style={{ display: 'flex', justifyContent: 'center' }}>
-							<div className="progress" style={{ width: '90%', marginBottom: 20 }}>
-								<div className="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style={{ width: '70%' }}>
-									<span className="sr-only">70% Complete</span>
-								</div>
-							</div>
-						</div>
+						<Health health={currentMachine.health} />
 					</div>
 					<h1>Stats</h1>
 					<h4>IP Address: {currentMachine.ip_address}</h4>
