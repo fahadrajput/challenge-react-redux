@@ -31,9 +31,9 @@
 	},
 	"scripts": {
 		"server": "node server/index.js",
-		"start": "react-scripts start",
+		"start": "EXTEND_ESLINT=true react-scripts start",
 		"build": "EXTEND_ESLINT=true react-scripts build",
-		"test": "EXTEND_ESLINT=true react-app-rewired test"
+		"test": "react-app-rewired test"
 	},
 	"browserslist": {
 		"production": [
