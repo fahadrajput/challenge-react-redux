@@ -98,6 +98,9 @@ export default function Machines() {
 		})
 
 		dispatch(getMachines(updateData))
+		if (currentMachine.id === result.id) {
+			setCurrentMachine({ ...currentMachine, health: result.health })
+		}
 	}
 
 	return (

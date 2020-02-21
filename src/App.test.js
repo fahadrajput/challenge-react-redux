@@ -3,12 +3,10 @@ import { render, cleanup } from '@testing-library/react';
 import App from './App';
 import Machines from './Machines'
 import Health from './Components/Health'
-import { useHistory, useParams } from 'react-router-dom'
+
 import {
   BrowserRouter as Router,
-  Route,
-  Switch,
-  Link
+  Route
 } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 
@@ -31,7 +29,23 @@ describe('Health', () => {
 
 describe('Health', () => {
   test('render Machines list Progress', () => {
-    const component1 = renderer.create(<Machines useHistory={useHistory} />);
+    const component1 = renderer.create(<Router>
+      <Route path='/machines' exact>
+        <Machines />
+      </Route>
+    </Router>);
+    let tree = component1.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+
+describe('Health', () => {
+  test('render Current Machine Progress', () => {
+    const component1 = renderer.create(<Router>
+      <Route path='/machines:machineId' exact>
+        <Machines />
+      </Route>
+    </Router>);
     let tree = component1.toJSON();
     expect(tree).toMatchSnapshot();
   });
