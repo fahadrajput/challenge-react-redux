@@ -27,7 +27,7 @@
 		"koa-bodyparser": "^4.2.1",
 		"koa-router": "^8.0.6",
 		"react-app-rewired": "^2.1.5",
-		"react-dev-utils": "^10.2.0"
+		"react-dev-utils": "^11.0.4"
 	},
 	"scripts": {
 		"server": "node server/index.js",
